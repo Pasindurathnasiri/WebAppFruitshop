@@ -1,0 +1,222 @@
+﻿@model Tuple<IEnumerable<SelectListItem>, IEnumerable<SelectListItem>, IEnumerable<SelectListItem>>
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Item").val(0);
+        $("#Item").change(function () {
+
+            var itemId = $("#Item").val();
+            GetItemUnitPrice(itemId);
+        });
+
+        $("input[type=text]").change(function () {
+            CalculateSubTotal();    
+        })
+
+        $("#btnAddToList").click(function () {
+            AddToTheItemList();
+        });
+
+    });
+
+    function AddToTheItemList(){
+        var tblItemList = $("#tblInvoiceItemList");
+        var UnitPrice = $("#txtUnitprice").val();
+        var Quantity = $("#txtQuantity").val();
+        var Discount = $("#txtDiscount").val();
+        var ItemId = $("#Item").val();
+        var ItemName = $("#Item option:selected").text();
+        var Total = (UnitPrice * Quantity) - Discount;
+
+        var ItemList = "<tr><td hidden>" +
+            ItemId +
+            "</td><td>" +
+            ItemName +
+            "</td><td>" +
+            parseFloat(UnitPrice).toFixed(2) +
+            "</td><td>" +
+            Quantity +
+            "</td><td>" +
+            parseFloat(Discount).toFixed(2) +
+            "</td><td>" +
+            parseFloat(Total).toFixed(2) +
+            "</td><td><input type='button' value='Remove' name='remove' class='btn btn-danger' onclick='RemoveItem(this)'/></td></tr>";
+
+        tblItemList.append(ItemList);
+        ResetItem();
+
+    }
+
+    function RemoveItem(itemId) {
+        $(itemId).closest('tr').remove();
+    }
+
+    function ResetItem() {
+        $("#txtUnitprice").val('');
+        $("#txtQuantity").val('');
+        $("#txtDiscount").val(0.00);
+        $("#Item").val(0);
+        $("#txtTotal").val("");
+    }
+
+    function CalculateSubTotal() {
+        var UnitPrice = $("#txtUnitprice").val();
+        var Quantity = $("#txtQuantity").val();
+        var Discount = $("#txtDiscount").val();
+        var Total = (UnitPrice * Quantity) - Discount;
+
+        $("#txtTotal").val(parseFloat(Total).toFixed(2));
+    }
+
+    function GetItemUnitPrice(itemId) {
+        $.ajax({
+            async: true,
+            type: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            data: { itemId: itemId },
+            url: '/base/getItemUnitPrice',
+            success: function (data) {
+                $("#txtUnitprice").val(parseFloat(data).toFixed(2));
+            },
+            error: function () {
+                alert("Problem Getting Unit Price");
+            }
+        });
+    }
+</script>
+
+<style>
+    fieldset{
+        border: 1px solid #ddd !important;
+        margin:0;
+        xmin-width:0;
+        padding:0;
+        position:0;
+        border-radius:4px;
+        background-color:rgba(107, 186, 245, 0.80);
+        padding-left:10px !important;
+
+    }
+
+    legend{
+        font-size:30px;
+        font-weight:bold;
+        margin-bottom:0px;
+        width:40%;
+        border: 1px solid #ddd;
+        border-radius:4px;
+        padding:5px 5px 5px 10px;
+        background-color:antiquewhite;
+    }
+</style>
+
+<fieldset>
+    <legend>
+        ABC Fruit Shop
+    </legend>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="from-group">
+                    Customer :
+                    @Html.DropDownList("Customer", new SelectList(Model.Item1, "Value", "Text"),
+                    new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="from-group">
+                    Payment Type :
+                    @Html.DropDownList("PaymentType", new SelectList(Model.Item3, "Value", "Text"),
+                    new { @class = "form-control" })
+
+                </div><br />
+
+            </div>
+        </div>
+    </div>
+</fieldset><br />
+
+<fieldset>
+    <legend>
+        Items
+    </legend>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    Item:
+                    @Html.DropDownList("Item", new SelectList(Model.Item2, "Value", "Text"),
+                    new { @class = "form-control" }
+                   )
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    Unit Price:
+                    <input type="text" readonly="readonly" id="txtUnitprice" value="0.00" name="UnitPrice" class="form-control" />
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    Quantity:
+                    <input type="text" id="txtQuantity" value="0" name="Quantity" class="form-control" />
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    Discount:
+                    <input type="text" id="txtDiscount" value="0.00" name="Discount" class="form-control" />
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    Total:
+                    <input type="text" readonly="readonly" id="txtTotal" value="0.00" name="Total" class="form-control" />
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+
+                    <input type="button" style="margin-top:22px;" id="btnAddToList" value="Add To List" name="AddToList" class="btn btn-success" />
+
+                </div>
+            </div>
+
+        </div>
+       
+    </div>
+    
+</fieldset><br />
+<fieldset>
+    <legend>
+        Invoice List
+    </legend>
+    <table class="table" style="width:100%;" id="tblInvoiceItemList">
+        <thead class="table-dark">
+            <tr>
+                <th hidden>Item Id</th>
+                <th>Item Name</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Discount</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+</fieldset>
+
