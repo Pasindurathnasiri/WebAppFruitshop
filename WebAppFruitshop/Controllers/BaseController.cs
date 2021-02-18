@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebAppFruitshop.Models;
 using WebAppFruitshop.Repositories;
+using WebAppFruitshop.ViewModel;
 
 namespace WebAppFruitshop.Controllers
 {
@@ -32,6 +33,11 @@ namespace WebAppFruitshop.Controllers
         {
             decimal UnitPrice = objfruitShopDBEntities.Items.Single(model => model.ItemId == itemId).ItemPrice;
             return Json(UnitPrice, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Index(OrderViewModel objOrderViewModel)
+        {
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
     }
