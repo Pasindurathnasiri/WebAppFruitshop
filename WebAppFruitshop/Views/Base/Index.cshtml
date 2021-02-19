@@ -34,7 +34,6 @@
     function FinalPayment() {
         var objOrderViewModel = {};
         var ListOfOrderDetailViewModel = new Array();
-        //ListOfOrderDetailViewModel
         objOrderViewModel.PaymentTypeId = $("#PaymentType").val();
         objOrderViewModel.CustomerId = $("#Customer").val();
         objOrderViewModel.FinalTotal = $("#txtFinalTotal").val();
@@ -59,7 +58,7 @@
             data: JSON.stringify(objOrderViewModel),
             url: '/Base/Index',
             success: function (data) {
-
+                alert(data);
             },
             error: function () {
                 alert("Data Adding Failed.!")
@@ -207,6 +206,24 @@
         background-color:antiquewhite;
     }
 </style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">ABC Fruit Shop</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" style="text-decoration:none;">@Html.ActionLink("Home","Index")<span class="sr-only">(current)</span></a>
+            </li>&nbsp;&nbsp;&nbsp;
+            <li class="nav-item">
+                <a class="nav-link" href="#">@Html.ActionLink("Invoice", "Invoice")</a>
+            </li>
+            
+        </ul>
+    </div>
+</nav>
 
 <fieldset>
     <legend>

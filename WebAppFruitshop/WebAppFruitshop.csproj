@@ -244,6 +244,7 @@
     <Compile Include="Models\Item.cs">
       <DependentUpon>FruitShopDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MultipleTableJoin.cs" />
     <Compile Include="Models\Order.cs">
       <DependentUpon>FruitShopDBModel.tt</DependentUpon>
     </Compile>
@@ -292,6 +293,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Base\Invoice.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

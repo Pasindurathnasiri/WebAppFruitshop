@@ -20,6 +20,7 @@ namespace WebAppFruitshop.Models
         public decimal UnitPrice { get; set; }
         public decimal Discount { get; set; }
         public decimal Total { get; set; }
+        public decimal Quantity { get; set; }
     
         public virtual Order Order { get; set; }
     }

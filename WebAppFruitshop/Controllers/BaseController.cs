@@ -19,13 +19,27 @@ namespace WebAppFruitshop.Controllers
         // GET: Base
         public ActionResult Index()
         {
-
             CustomerRepository objCustomerRepository = new CustomerRepository();
             ItemRepository objitemRepository = new ItemRepository();
             PaymentTypeRepository objpaymentTypeRepository = new PaymentTypeRepository();
             var objMultipleModels = new Tuple<IEnumerable<SelectListItem>, IEnumerable<SelectListItem>, IEnumerable<SelectListItem>>
                 (objCustomerRepository.GetAllCustomers(),objitemRepository.GetAllItems(),objpaymentTypeRepository.GetAllPaymentTypes());
             return View(objMultipleModels);
+        }
+
+        public ActionResult Invoice()
+        {
+            FruitShopDBEntities db = new FruitShopDBEntities();
+            List<Order> orderList = db.Orders.ToList();
+            List<Customer> customerList = db.Customers.ToList();
+            List<OrderDetail> orderdetaillist = db.OrderDetails.ToList();
+
+            ViewData["jointables"] = from order in orderList
+                                     join customer in customerList on order.CustomerId equals customer.CustomerId into table1
+                                     from customer in table1.DefaultIfEmpty()
+                                     select new MultipleTableJoin { orderlist = order, customerlist = customer };
+          
+            return View(ViewData["jointables"]);
         }
         
         [HttpGet]
@@ -35,10 +49,12 @@ namespace WebAppFruitshop.Controllers
             return Json(UnitPrice, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public JsonResult Index(OrderViewModel objOrderViewModel)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
+            OrderRepository orderRepository = new OrderRepository();
+            orderRepository.AddOrder(objOrderViewModel);
+            return Json("Successfully Ordered", JsonRequestBehavior.AllowGet);
         }
-
     }
 }
