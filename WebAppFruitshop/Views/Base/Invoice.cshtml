@@ -1,12 +1,33 @@
 ﻿
 @{
     ViewBag.Title = "Invoice";
+    
 }
-
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
 <script type="text/javascript">
-    function viewInvoice(e) {
-        console.log("Hell")
-    }
+    var DetailPostBackUrl = '/Base/myModal';
+    $(function () {
+        $(".anchorDetail").click(function () {
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            $.ajax({
+                type: "GET",
+                url: DetailPostBackUrl,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id },
+                datatype: "json",
+                success: function (data) {
+                    
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic Content load Failed.");
+                }
+            });
+        });
+
+    });
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,7 +50,16 @@
 <h2>Invoice List</h2>
 <hr />
 
-<table class="table" style="width:100%;" >
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+
+</div>
+
+<table class="table" style="width:100%;">
     <thead class="table-dark">
         <tr>
             <th>Order Id</th>
@@ -45,20 +75,25 @@
     <tbody>
         @foreach (var item in ViewData["jointables"] as IEnumerable<WebAppFruitshop.Models.MultipleTableJoin>)
         {
-        <tr>
-            <td>@item.orderlist.OrderId</td>
-            <td>@item.orderlist.CustomerId</td>
-            <td>@item.customerlist.CustomerName</td>
-            <td>@item.orderlist.OrderNumber</td>
-            <td>@item.orderlist.OrderDate</td>
-            <td>@item.orderlist.FinalTotal</td>
-            <td><input type="button" value="View" name="view" class="btn btn-info" onclick="viewInvoice(this)" /></td>
+            <tr>
+                <td>@item.orderlist.OrderId</td>
+                <td>@item.orderlist.CustomerId</td>
+                <td>@item.customerlist.CustomerName</td>
+                <td>@item.orderlist.OrderNumber</td>
+                <td>@item.orderlist.OrderDate</td>
+                <td>@item.orderlist.FinalTotal</td>
+                <td><a href="javascript:void(0);" class="anchorDetail" data-id="@item.orderlist.OrderId">View</a></td>
 
 
-        </tr>
+            </tr>
         }
     </tbody>
 </table>
+
+
+
+
+
 
 
 

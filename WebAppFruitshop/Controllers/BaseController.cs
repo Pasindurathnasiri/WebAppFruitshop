@@ -56,5 +56,31 @@ namespace WebAppFruitshop.Controllers
             orderRepository.AddOrder(objOrderViewModel);
             return Json("Successfully Ordered", JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public ActionResult myModal(int Id)
+        {
+            Order order = objfruitShopDBEntities.Orders.Find(Id);
+            List<OrderDetail> orderdetaillist = objfruitShopDBEntities.OrderDetails.ToList();
+            var filterd = new List<OrderDetail>();
+            foreach (var item in orderdetaillist)
+            {
+                if (item.OrderId==Id)
+                {
+                    filterd.Add(item);
+                }
+            }
+
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return PartialView("_myModal",order);
+            }
+            
+
+        }
     }
 }

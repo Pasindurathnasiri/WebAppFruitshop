@@ -1,0 +1,40 @@
+﻿
+@model WebAppFruitshop.Models.Order
+
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fruit Shop &nbsp;&nbsp; Invoice No:@Html.DisplayFor(Model => Model.OrderNumber)</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+    </div>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            Customer Id :
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.CustomerId)
+        </dd>
+        <dt>
+            Date :
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.OrderDate)
+        </dd>
+        <dt>
+            Total Amount : 
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.FinalTotal)
+        </dd>
+        
+    </dl>
+
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+
+</div>
